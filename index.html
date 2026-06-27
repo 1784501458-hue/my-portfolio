@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary SEO -->
+  <title>IL MIO PORTFOLIO // DEV LAB</title>
+  <meta name="description"
+    content="Digital Media Artist Portfolio. Building modern web applications, interactive installations, and digital art." />
+  <meta name="author" content="Xinqi Pan" />
+  <link rel="canonical" href="#" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;700&display=swap"
+    rel="stylesheet" />
+
+  <!-- Devicon for Hard Skills Icons -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+
+  <!-- Styles, PWA & Favicon -->
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#ec4899" />
+  <link rel="icon" type="image/png" href="./assets/logo.png" />
+  <link rel="apple-touch-icon" href="/assets/logo.png" />
+
+  <!-- GSAP for Staggered Menu Animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <!-- Inline Style Override per Icone Skills -->
+  <style>
+    .skill-chip {
+      display: inline-flex !important;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.8rem !important;
+    }
+    .skill-chip i {
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <a href="#panelContainer" class="skip-link">Vai al contenuto</a>
+  <!-- ── THREE.JS CANVAS ─────────────────────────── -->
+  <div id="aurora-bg" style="position: fixed; inset: 0; z-index: -1; pointer-events: none; width: 100%; height: 100%;"></div>
+  
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- ── TOP BLUR TRANSITION ─────────────────── -->
+  <div class="top-blur"></div>
+
+  <!-- ── SCAN LINE OVERLAY ───────────────────── -->
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+
+  <!-- ═══════════════════════════════════════════
+    MAIN NAV
+  ═══════════════════════════════════════════ -->
+  <nav class="main-nav" id="mainNav">
+    <div class="nav-brand cursor-pointer" id="navBrandBtn" role="button" tabindex="0" title="Torna alla Home" aria-label="Torna alla Home">
+      <img src="assets/logo.png" alt="My Logo" class="nav-logo-img" />
+    </div>
+
+    <!-- 语言切换开关 (EN / IT) -->
+    <div class="lang-switcher" style="display: flex; gap: 0.8rem; align-items: center; margin-left: auto; margin-right: 1.5rem; font-family: var(--mono); font-size: 0.75rem; font-weight: 700; color: var(--muted);">
+      <span class="cursor-pointer hover-white" style="transition: color 0.3s;">EN</span>
+      <span>/</span>
+      <span class="cursor-pointer" style="color: var(--purple);">IT</span>
+    </div>
+
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema scuro/chiaro" title="Cambia tema">
+      <!-- Moon: shown in light mode -->
+      <svg class="icon-moon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" />
+      </svg>
+      <!-- Sun: shown in dark mode -->
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="4.5" fill="currentColor" />
+        <line x1="12" y1="2" x2="12" y2="5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        <line x1="12" y1="18.5" x2="12" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        <line x1="2" y1="12" x2="5.5" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        <line x1="18.5" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        <line x1="4.93" y1="4.93" x2="7.17" y2="7.17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        <line x1="16.83" y1="16.83" x2="19.07" y2="19.07" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        <line x1="19.07" y1="4.93" x2="16.83" y2="7.17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        <line x1="7.17" y1="16.83" x2="4.93" y2="19.07" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+    </button>
+  </nav>
+
+  <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu navigazione">
+    <div class="menu-icon-grid">
+      <span class="dot dot-1"></span>
+      <span class="dot dot-2"></span>
+      <span class="dot dot-3"></span>
+      <span class="dot dot-4"></span>
+    </div>
+  </button>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="menu-overlay" id="menuOverlay"></div>
+
+  <!-- Mobile Menu Prelayers & Panel -->
+  <div class="sm-prelayers" aria-hidden="true">
+    <div class="sm-prelayer sm-prelayer-1"></div>
+    <div class="sm-prelayer sm-prelayer-2"></div>
+  </div>
+
+  <aside id="staggeredPanel" class="staggered-menu-panel">
+    <ul class="sm-panel-list">
+      <li class="sm-panel-itemWrap"><a href="#home" class="sm-panel-item" data-section="home"><span class="sm-panel-itemLabel">HOME</span></a></li>
+      <li class="sm-panel-itemWrap"><a href="#about" class="sm-panel-item" data-section="about"><span class="sm-panel-itemLabel">CHI SONO</span></a></li>
+      <li class="sm-panel-itemWrap"><a href="#skills" class="sm-panel-item" data-section="skills"><span class="sm-panel-itemLabel">COMPETENZE</span></a></li>
+      <li class="sm-panel-itemWrap"><a href="#projects" class="sm-panel-item" data-section="projects"><span class="sm-panel-itemLabel">PROGETTI</span></a></li>
+      <li class="sm-panel-itemWrap"><a href="#contact" class="sm-panel-item" data-section="contact"><span class="sm-panel-itemLabel">CONTATTI</span></a></li>
+    </ul>  
+  </aside>
+
+  <!-- Navigation Links (Desktop Inline / Mobile Drawer) -->
+  <div class="nav-links" id="navLinks">
+    <div class="mobile-nav-brand">
+      <span class="name-line">DIGITAL</span>
+      <span class="name-line accent">ARTIST</span>
+    </div>
+    <button class="nav-btn active" data-section="home" id="navHome">
+      <span class="pill-label">HOME</span>
+      <span class="pill-circle"></span>
+      <span class="pill-dot"></span>
+    </button>
+    <button class="nav-btn" data-section="about" id="navAbout">
+      <span class="pill-label">CHI SONO</span>
+      <span class="pill-circle"></span>
+      <span class="pill-dot"></span>
+    </button>
+    <button class="nav-btn" data-section="skills" id="navSkills">
+      <span class="pill-label">COMPETENZE</span>
+      <span class="pill-circle"></span>
+      <span class="pill-dot"></span>
+    </button>
+    <button class="nav-btn" data-section="projects" id="navProjects">
+      <span class="pill-label">PROGETTI</span>
+      <span class="pill-circle"></span>
+      <span class="pill-dot"></span>
+    </button>
+    <button class="nav-btn" data-section="contact" id="navContact">
+      <span class="pill-label">CONTATTI</span>
+      <span class="pill-circle"></span>
+      <span class="pill-dot"></span>
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+    PANEL CONTAINER
+  ═══════════════════════════════════════════ -->
+  <main class="panel-container" id="panelContainer">
+    <!-- ── HOME ─────────────────────────────── -->
+    <section class="panel active" id="panel-home">
+      <div class="panel-inner home-inner">
+        <h1 class="hero-name">
+          <span class="name-line" style="font-family: 'Playfair Display', serif; font-size: clamp(3rem, 10vw, 8rem);">CIAO, SONO</span>
+          <span class="name-line" style="color: var(--purple); font-family: 'Playfair Display', serif; font-size: clamp(3rem, 10vw, 8rem);">XINQI PAN</span>
+        </h1>
+        <div class="role-line">
+          <span class="bracket">[</span>
+          <span class="typed-out" id="typedRole"></span>
+          <span class="typed-cursor">_</span>
+          <span class="bracket">]</span>
+        </div>
+        <p class="hero-desc" id="heroDesc" style="font-family: 'Space Mono', monospace;">
+          Oltrepassando i confini delle realtà digitali attraverso la programmazione creativa, l'arte guidata dall'IA e la modellazione 3D avanzata.<br/>
+          Focus su game design immersivo e installazioni interattive.
+        </p>
+        <div class="hero-actions">
+          <button class="action-btn" id="exploreBtn">
+            <span class="btn-bracket">[</span> ESPLORA I PROGETTI <span class="btn-bracket">]</span>
+          </button>
+          <a href="#" class="action-btn action-ghost">
+            <span class="btn-bracket">[</span> PORTFOLIO PDF <span class="btn-bracket">]</span>
+          </a>
+        </div>
+        <div class="scroll-hint">SCORRI O USA IL MENU ↑</div>
+      </div>
+    </section>
+
+    <!-- ── ABOUT ─────────────────────────────── -->
+    <section class="panel" id="panel-about">
+      <div class="panel-inner">
+        <p class="section-pre">////// CHI_SONO</p>
+        <h2 class="section-title">CHI_SONO</h2>
+        <div class="about-grid">
+          <div class="about-bio" style="font-family: 'Space Mono', monospace;">
+            <p id="aboutText1">
+              Con una laurea in <strong>Digital Media Art</strong>, la mia ricerca artistica si concentra sull'intersezione tra le tecnologie emergenti e le esperienze immersive.
+            </p>
+            <p id="aboutText2">
+              Attraverso la programmazione creativa (creative coding), l'intelligenza artificiale e la modellazione 3D avanzata, sviluppo progetti che spaziano dal game design alle installazioni interattive e alla Realtà Virtuale (VR). Esploro nuovi linguaggi visivi per creare opere che superano i confini tra l'ambiente fisico e la dimensione digitale.
+            </p>
+            <div class="meta-table">
+              <div class="meta-row">
+                <span class="meta-key">RUOLO</span><span class="meta-val" id="metaRole">Digital Media Artist</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-key">POSIZIONE</span><span class="meta-val">Cina 🇨🇳</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-key">FOCUS</span><span class="meta-val" id="metaFocus">Game Design · 3D · AI Art · VR · Installazioni</span>
+              </div>
+            </div>
+          </div>
+          <!-- 右侧照片预留位 -->
+          <div class="about-photo-wrapper" style="width: 100%; height: 100%; min-height: 400px; border-radius: 24px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+            <img src="./assets/photo.jpg" alt="Xinqi Pan" style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform 0.5s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SKILLS (RESTORED CON ICONE E STRUTTURA AGGIORNATA) ── -->
+    <section class="panel" id="panel-skills">
+      <div class="panel-inner">
+        <p class="section-pre">////// COMPETENZE</p>
+        <h2 class="section-title">TECH_STACK</h2>
+        <div class="skills-grid">
+          
+          <!-- GAME DESIGN & 3D -->
+          <div class="skill-block">
+            <div class="skill-block-header">&gt; GAME DESIGN & 3D MODELING</div>
+            <div class="tag-cloud">
+              <span class="skill-chip"><i class="devicon-unity-original"></i> Unity</span>
+              <span class="skill-chip"><i class="devicon-unrealengine-original"></i> Unreal Engine 5</span>
+              <span class="skill-chip"><i class="devicon-blender-original"></i> Blender</span>
+              <span class="skill-chip"><i class="devicon-maya-plain"></i> Maya</span>
+              <span class="skill-chip">Rhino 3D</span>
+              <span class="skill-chip">AutoCAD</span>
+            </div>
+          </div>
+          
+          <!-- ADOBE & VISUAL -->
+          <div class="skill-block">
+            <div class="skill-block-header">&gt; VISUAL & MOTION DESIGN</div>
+            <div class="tag-cloud">
+              <span class="skill-chip"><i class="devicon-photoshop-plain"></i> Photoshop</span>
+              <span class="skill-chip"><i class="devicon-illustrator-plain"></i> Illustrator</span>
+              <span class="skill-chip"><i class="devicon-aftereffects-plain"></i> After Effects</span>
+              <span class="skill-chip"><i class="devicon-premierepro-plain"></i> Premiere Pro</span>
+              <span class="skill-chip"><i class="devicon-figma-plain"></i> Figma</span>
+            </div>
+          </div>
+          
+          <!-- CREATIVE CODING & AI -->
+          <div class="skill-block">
+            <div class="skill-block-header">&gt; CREATIVE CODING & AI ART</div>
+            <div class="tag-cloud">
+              <span class="skill-chip"><i class="devicon-csharp-plain"></i> C#</span>
+              <span class="skill-chip"><i class="devicon-cplusplus-plain"></i> C++</span>
+              <span class="skill-chip"><i class="devicon-python-plain"></i> Python</span>
+              <span class="skill-chip">Stable Diffusion</span>
+              <span class="skill-chip">Midjourney</span>
+              <span class="skill-chip">TouchDesigner</span>
+            </div>
+          </div>
+          
+          <!-- INTERACTION & HARDWARE -->
+          <div class="skill-block">
+            <div class="skill-block-header">&gt; INTERACTION & HARDWARE</div>
+            <div class="tag-cloud">
+              <span class="skill-chip skill-chip-accent"><i class="devicon-arduino-plain"></i> Arduino</span>
+              <span class="skill-chip skill-chip-accent">Installazioni Fisiche</span>
+              <span class="skill-chip skill-chip-accent">Realtà Virtuale (VR)</span>
+              <span class="skill-chip skill-chip-accent">Sensori Interattivi</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PROJECTS (React + Framer Motion) ─────────────────────────── -->
+    <section class="panel-projects-react" id="panel-projects">
+      <div id="react-projects-root"></div>
+    </section>
+
+    <!-- ── CONTACT ─────────────────────────── -->
+    <section class="panel" id="panel-contact">
+      <div class="panel-inner">
+        <p class="section-pre" style="color: #FF10A0;">////// STABILENDO_CONNESSIONE</p>
+        <h2 class="section-title" style="color: #FF10A0;">PARLIAMONE.</h2>
+        
+        <div class="contact-layout" style="display: flex; flex-direction: column; align-items: center; max-width: 600px; margin: 0 auto; gap: 0;">
+          
+          <p class="contact-tagline" style="text-align: center; color: #FF10A0; margin-bottom: 3rem;">
+            Sempre alla ricerca di nuove sfide. Restiamo in contatto.
+          </p>
+          
+          <form class="contact-form" id="contactForm" style="width: 100%;">
+            <div class="form-field">
+              <input type="text" id="formName" class="form-input" placeholder=" " required style="color: #FF10A0; border-bottom: 1px solid rgba(255,16,160,0.3);" />
+              <label for="formName" class="form-label" style="color: #FF10A0;">// NOME</label>
+              <span class="form-line" style="background: #FF10A0;"></span>
+            </div>
+
+            <div class="form-field">
+              <input type="email" id="formEmail" class="form-input" placeholder=" " required style="color: #FF10A0; border-bottom: 1px solid rgba(255,16,160,0.3);" />
+              <label for="formEmail" class="form-label" style="color: #FF10A0;">// EMAIL</label>
+              <span class="form-line" style="background: #FF10A0;"></span>
+            </div>
+
+            <div class="form-field">
+              <textarea id="formMessage" class="form-input form-textarea" placeholder=" " required style="color: #FF10A0; border-bottom: 1px solid rgba(255,16,160,0.3);"></textarea>
+              <label for="formMessage" class="form-label" style="color: #FF10A0;">// MESSAGGIO</label>
+              <span class="form-line" style="background: #FF10A0;"></span>
+            </div>
+
+            <button type="submit" class="form-submit" id="formSubmitBtn" style="color: #FF10A0; border: 1px solid #FF10A0; width: 100%;">[ INVIA MESSAGGIO ]</button>
+            <p class="form-note" id="formNote" style="color: #FF10A0; text-align: center; margin-top: 1rem;"></p>
+          </form>
+        </div>
+        
+        <footer class="site-footer" style="text-align: center; margin-top: 5rem; color: rgba(255,16,160,0.4);">
+          © 2026 Xinqi Pan Portfolio — Realizzato con HTML, CSS &amp; JS
+        </footer>
+      </div>
+    </section>
+
+  <!-- ═══════════════════════════════════════════
+    PROJECT DETAIL OVERLAY
+  ═══════════════════════════════════════════ -->
+  <div class="project-overlay-panel" id="projectOverlay">
+    <div class="overlay-inner" style="grid-template-columns: 1fr 1.2fr; gap: 3rem; max-height: 90vh; overflow-y: auto; padding: 2rem;">
+      <div class="overlay-left">
+        <p class="overlay-pre" id="overlayPre"></p>
+        <h2 class="overlay-title" id="overlayTitle"></h2>
+        <p class="overlay-desc" id="overlayDesc" style="font-size: 1.05rem; line-height: 1.9;"></p>
+        <div class="overlay-tech" id="overlayTech"></div>
+        <div class="overlay-links" id="overlayLinks"></div>
+      </div>
+      
+      <div class="overlay-right" style="display: flex; flex-direction: column; gap: 2rem;">
+        
+        <div id="overlayVideoContainer" style="width: 100%; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: none;">
+          <iframe id="overlayVideo" width="100%" height="100%" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <img class="overlay-img" id="overlayDetailImg" src="" alt="项目细节" style="width: 100%; border-radius: 16px; border: 1px solid var(--border); display: none;" />
+        
+      </div>
+    </div>
+    <button class="close-btn" id="closeOverlayBtn" aria-label="关闭项目详情">
+      ← INDIETRO
+    </button>
+  </div>
+
+  <!-- Full-page theme transition overlay (must be before scripts) -->
+  <div id="theme-transition-overlay"></div>
+
+  <!-- Scripts -->
+  <script type="module" src="script.js"></script>
+  <!-- React + Framer Motion Projects Stacking Component (plain ES module, no Babel) -->
+  <script type="module" src="projects-component.js"></script>
+</body>
+
+</html>
