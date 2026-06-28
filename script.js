@@ -622,14 +622,10 @@ window.openProjectDetails = function(p) {
 };
 
 // 弹窗关闭逻辑
-function closeProject() {
+window.closeProject = function() {
   const overlay = document.getElementById("projectOverlay");
   if(overlay) overlay.classList.remove("open");
   document.body.style.overflow = "";
-  // 关键：关闭弹窗时必须清空视频src，不然视频会在后台继续放声音！
   const videoIframe = document.getElementById("overlayVideo");
-  if(videoIframe) videoIframe.src = ""; 
-}
-
-const closeOverlayBtn = document.getElementById("closeOverlayBtn");
-if (closeOverlayBtn) closeOverlayBtn.addEventListener("click", closeProject);
+  if(videoIframe) videoIframe.src = "";
+};
