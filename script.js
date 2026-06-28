@@ -15,7 +15,7 @@ import { Renderer, Program, Mesh as OglMesh, Triangle } from 'ogl';
     if (window.__updateAuroraTheme) window.__updateAuroraTheme(dark);
   }
 
-  let dark = localStorage.getItem("theme") === "dark";
+  let dark = localStorage.getItem("theme") === "light";
   applyTheme(dark);
 
   window.__applyTheme = applyTheme;
