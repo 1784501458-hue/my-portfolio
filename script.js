@@ -620,6 +620,8 @@ window.openProjectDetails = function(p) {
   // 5. 显示弹窗并锁定背景滚动
   overlay.classList.add("open");
   document.body.style.overflow = "hidden"; 
+if(document.getElementById("mainNav")) document.getElementById("mainNav").style.display = "none";
+if(document.getElementById("navLinks")) document.getElementById("navLinks").style.display = "none";
 };
 
 /* --- 终极强制关闭逻辑 --- */
@@ -629,6 +631,8 @@ window.closeProject = function() {
   document.body.style.overflow = "";
   const videoIframe = document.getElementById("overlayVideo");
   if(videoIframe) videoIframe.src = ""; 
+if(document.getElementById("mainNav")) document.getElementById("mainNav").style.display = "";
+if(document.getElementById("navLinks")) document.getElementById("navLinks").style.display = "";
 };
 
 // 无论点击哪里，只要点到了关闭按钮，就强制执行！
