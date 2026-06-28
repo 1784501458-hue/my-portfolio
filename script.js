@@ -622,12 +622,19 @@ window.openProjectDetails = function(p) {
   document.body.style.overflow = "hidden"; 
 };
 
-// 弹窗关闭逻辑
+/* --- 终极强制关闭逻辑 --- */
 window.closeProject = function() {
   const overlay = document.getElementById("projectOverlay");
   if(overlay) overlay.classList.remove("open");
   document.body.style.overflow = "";
   const videoIframe = document.getElementById("overlayVideo");
-  if(videoIframe) videoIframe.src = "";
+  if(videoIframe) videoIframe.src = ""; 
 };
+
+// 无论点击哪里，只要点到了关闭按钮，就强制执行！
+document.addEventListener("click", function(e) {
+  if (e.target && (e.target.id === "closeOverlayBtn" || e.target.closest("#closeOverlayBtn"))) {
+    window.closeProject();
+  }
+});
 
