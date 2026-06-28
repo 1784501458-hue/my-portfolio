@@ -629,3 +629,25 @@ window.closeProject = function() {
   const videoIframe = document.getElementById("overlayVideo");
   if(videoIframe) videoIframe.src = "";
 };
+/* 强制显示并固定项目关闭按钮 */
+#closeOverlayBtn {
+    position: fixed !important;
+    top: 2rem !important;
+    right: 2rem !important;
+    z-index: 999999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+    color: #FF10A0 !important;
+    border: 1px solid #FF10A0 !important;
+    padding: 0.8rem 1.5rem !important;
+    cursor: pointer !important;
+    border-radius: 8px !important;
+    font-weight: bold !important;
+    font-family: monospace !important;
+}
+#closeOverlayBtn:hover {
+    background: #FF10A0 !important;
+    color: #000 !important;
+}
